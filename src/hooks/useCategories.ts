@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 
 export interface Category {
-  id: number;
+  id: number | string;
   name: string;
 }
 
@@ -73,11 +73,14 @@ export const useCreateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation<Category, Error, { name: string }>({
     mutationFn: async ({ name }) => {
-      const { data } = await apiClient.post("/categories", { name });
+      const localId = `local-${Date.now()}`; // Use timestamp as unique local id
+      const newCategory = { id: localId, name };
+
       const changes = getLocalChanges();
-      changes.created.push(data);
+      changes.created.push(newCategory);
       setLocalChanges(changes);
-      return data;
+
+      return newCategory; 
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -89,8 +92,22 @@ export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
   return useMutation<Category, Error, Category>({
     mutationFn: async (category) => {
-      const { data } = await apiClient.put(`/categories/${category.id}`, category);
       const changes = getLocalChanges();
+
+      // If the category is created locally (with local id), don't hit the API
+      if (typeof category.id === "string" && category.id.startsWith("local-")) {
+        const idx = changes.created.findIndex((c) => c.id === category.id);
+        if (idx > -1) {
+          changes.created[idx] = category;
+        } else {
+          changes.created.push(category);
+        }
+        setLocalChanges(changes);
+        return category; // Return immediately for UI update
+      }
+
+      // Otherwise, update via API
+      const { data } = await apiClient.put(`/categories/${category.id}`, category);
       const idx = changes.updated.findIndex((c) => c.id === category.id);
       if (idx > -1) {
         changes.updated[idx] = data;
@@ -106,17 +123,28 @@ export const useUpdateCategory = () => {
   });
 };
 
+// Delete category mutation
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, number>({
+  return useMutation<void, Error, string | number>({
     mutationFn: async (id) => {
-      await apiClient.delete(`/categories/${id}`);
       const changes = getLocalChanges();
 
+      const isLocal = typeof id === "string" && id.startsWith("local-");
+
+      if (isLocal) {
+        // Remove local-only category
+        changes.created = changes.created.filter((cat) => cat.id !== id);
+        changes.updated = changes.updated.filter((cat) => cat.id !== id);
+        setLocalChanges(changes);
+        return;
+      }
+
+      // Otherwise, delete via API
+      await apiClient.delete(`/categories/${id}`);
       changes.deleted.push(id);
       changes.created = changes.created.filter((cat) => cat.id !== id);
       changes.updated = changes.updated.filter((cat) => cat.id !== id);
-
       setLocalChanges(changes);
     },
     onSuccess: () => {
