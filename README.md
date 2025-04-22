@@ -57,6 +57,11 @@ This is a Next.js application built for a technical assessment. It allows users 
 This application uses a mock JSON placeholder API:
 `https://my-json-server.typicode.com/MostafaKMilly/demo`
 
+## DEMO
+https://github.com/user-attachments/assets/f72833f6-3417-43b6-95d2-ea722432a70c
+
+
+
 **Note:** As this is a mock API, data changes (uploads, edits, deletions) will **not** persist permanently. They will appear to work locally due to client-side state management and React Query caching but will reset on a hard refresh or when the cache expires. Image uploads are simulated by sending metadata only.
 
 ## Project Structure (Brief)
