@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Image Annotator App
 
-## Getting Started
+This is a Next.js application built for a technical assessment. It allows users to manage image categories, upload/view/delete images (simulated), filter them, and annotate them with rectangles using React Konva.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Category Management (CRUD)
+- Image Management (Simulated Upload, View, Delete)
+- Filtering (by Name, by Category)
+- Image Annotation (Draw Rectangles, Select Colors, Save/Delete Annotations)
+- Responsive Design using Material UI
+- Data fetching and caching with React Query
+- Virtualized image gallery using React Window
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Next.js (App Router)
+- React
+- TypeScript
+- Material UI (MUI)
+- React Query
+- React Konva
+- React Window
+- Axios
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Prerequisites
 
-## Learn More
+- Node.js (v18.x or later recommended)
+* npm or yarn
 
-To learn more about Next.js, take a look at the following resources:
+## Setup and Running
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    cd image-annotator-app
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-## Deploy on Vercel
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API
+
+This application uses a mock JSON placeholder API:
+`https://my-json-server.typicode.com/MostafaKMilly/demo`
+
+**Note:** As this is a mock API, data changes (uploads, edits, deletions) will **not** persist permanently. They will appear to work locally due to client-side state management and React Query caching but will reset on a hard refresh or when the cache expires. Image uploads are simulated by sending metadata only.
+
+## Project Structure (Brief)
